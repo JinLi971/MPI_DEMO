@@ -1,12 +1,9 @@
-// Author: Wes Kendall
-// Copyright 2011 www.mpitutorial.com
-// This code is provided freely with the tutorials on mpitutorial.com. Feel
-// free to modify it for your own use. Any distribution of the code must
-// either provide a link to www.mpitutorial.com or keep this header in tact.
-//
-// Example application of random walking using MPI_Send, MPI_Recv, and
-// MPI_Probe.
-//
+/* File: Demo_randwalk.c
+ * This is an example of random walk in 1D using  MPI_Send, MPI_Recv, and MPI_Probe.
+ * Author: Jing Liu @ TDB,LMB, Uppsala University
+ * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
+ * Date: Jan, 2015, last update: Jan 2016
+*/
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -15,17 +12,17 @@
 
 using namespace std;
 
+// walker structure
 typedef struct {
   int location;
   int num_steps_left_in_walk;
 } Walker;
 
-void decompose_domain(int domain_size, int world_rank,
+//Assume the domain size is greater than the world size.
+void domain_decom(int domain_size, int world_rank,
                       int world_size, int* subdomain_start,
                       int* subdomain_size) {
   if (world_size > domain_size) {
-    // Don't worry about this special case. Assume the domain size
-    // is greater than the world size.
     MPI_Abort(MPI_COMM_WORLD, 1);
   }
   *subdomain_start = domain_size / world_size * world_rank;
@@ -36,7 +33,7 @@ void decompose_domain(int domain_size, int world_rank,
   }
 }
 
-void initialize_walkers(int num_walkers_per_proc, int max_walk_size,
+void init(int num_walkers_per_proc, int max_walk_size,
                         int subdomain_start, int subdomain_size,
                         vector<Walker>* incoming_walkers) {
   Walker walker;
@@ -67,18 +64,18 @@ void walk(Walker* walker, int subdomain_start, int subdomain_size,
   }
 }
 
-void send_outgoing_walkers(vector<Walker>* outgoing_walkers,
+void send_walkers(vector<Walker>* outgoing_walkers,
                            int world_rank, int world_size) {
   // Send the data as an array of MPI_BYTEs to the next process.
   // The last process sends to process zero.
-  MPI_Send((void*)outgoing_walkers->data(),
+  MPI_Rsend((void*)outgoing_walkers->data(),
            outgoing_walkers->size() * sizeof(Walker), MPI_BYTE,
            (world_rank + 1) % world_size, 0, MPI_COMM_WORLD);
   // Clear the outgoing walkers list
   outgoing_walkers->clear();
 }
 
-void receive_incoming_walkers(vector<Walker>* incoming_walkers,
+void receive_walkers(vector<Walker>* incoming_walkers,
                               int world_rank, int world_size) {
   // Probe for new incoming walkers
   MPI_Status status;
@@ -124,10 +121,10 @@ int main(int argc, char** argv) {
   vector<Walker> incoming_walkers, outgoing_walkers;
 
   // Find your part of the domain
-  decompose_domain(domain_size, world_rank, world_size,
+  domain_decom(domain_size, world_rank, world_size,
                    &subdomain_start, &subdomain_size);
-  // Initialize walkers in your subdomain
-  initialize_walkers(num_walkers_per_proc, max_walk_size, subdomain_start,
+  // Initialize walkers
+  init(num_walkers_per_proc, max_walk_size, subdomain_start,
                      subdomain_size, &incoming_walkers);
 
   cout << "Process " << world_rank << " initiated " << num_walkers_per_proc
@@ -136,7 +133,7 @@ int main(int argc, char** argv) {
 
   // Determine the maximum amount of sends and receives needed to
   // complete all walkers
-  int maximum_sends_recvs = max_walk_size / (domain_size / world_size) + 1;
+  int maximum_sends_recvs = (int)(max_walk_size / (domain_size / world_size) + 0.5);
   for (int m = 0; m < maximum_sends_recvs; m++) {
     // Process all incoming walkers
     for (int i = 0; i < incoming_walkers.size(); i++) {
@@ -148,17 +145,17 @@ int main(int argc, char** argv) {
          << endl;
     if (world_rank % 2 == 0) {
       // Send all outgoing walkers to the next process.
-      send_outgoing_walkers(&outgoing_walkers, world_rank,
+      send_walkers(&outgoing_walkers, world_rank,
                             world_size);
       // Receive all the new incoming walkers
-      receive_incoming_walkers(&incoming_walkers, world_rank,
+      receive_walkers(&incoming_walkers, world_rank,
                                world_size);
     } else {
       // Receive all the new incoming walkers
-      receive_incoming_walkers(&incoming_walkers, world_rank,
+      receive_walkers(&incoming_walkers, world_rank,
                                world_size);
       // Send all outgoing walkers to the next process.
-      send_outgoing_walkers(&outgoing_walkers, world_rank,
+      send_walkers(&outgoing_walkers, world_rank,
                             world_size);
     }
     cout << "Process " << world_rank << " received " << incoming_walkers.size()
@@ -168,3 +165,16 @@ int main(int argc, char** argv) {
   MPI_Finalize();
   return 0;
 }
+/*
+-bash-4.1$ mpic++ -o DemoRandwalk ../Demo_randwalk.cc
+-bash-4.1$ mpirun -n 3 DemoRandwalk 100 10 25
+Usage: random_walk domain_size max_walk_size num_walkers_per_proc
+Usage: random_walk domain_size max_walk_size num_walkers_per_proc
+Usage: random_walk domain_size max_walk_size num_walkers_per_proc
+Process 0 initiated 25 walkers in subdomain 0 - 32
+Process 0 done
+Process 1 initiated 25 walkers in subdomain 33 - 65
+Process 1 done
+Process 2 initiated 25 walkers in subdomain 66 - 99
+Process 2 done
+*/
