@@ -3,7 +3,7 @@
  * shows how to find the size of incomming message
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
     int nrow, mcol, root, myid, ndim, p, rank;
     int dims[2], coords[2], cyclic[2], reorder;
-    MPI_Comm comm2D, comm2Dp;
+    MPI_Comm comm2D;
     /* Starts MPI processes ... */
     MPI_Init(&argc, &argv);               /* starts MPI */
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);  /* get current process id */
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     root = 0;
     cyclic[0] = 0;
     cyclic[1] = 0;
-    reorder = 1;
+    reorder = 1; // change reorder = 0; try several times to see differences.
 
     if(myid == root) {
         printf("\n");
@@ -49,3 +49,20 @@ int main(int argc, char *argv[])
     }
     MPI_Finalize();
 }
+
+
+/*-bash-4.1$ mpicc -o Democart Demo_cart.c
+ * -bash-4.1$ mpirun -n 6 Democart
+
+There are six (6) processes
+use all 6 to create 3x2 cartesian topology
+    Cart. Coords.     Cart
+   i   j   rank   myid
+   0    0    0    0
+   0    1    1    1
+   1    0    2    2
+   1    1    3    3
+   2    0    4    4
+   2    1    5    5
+*/
+

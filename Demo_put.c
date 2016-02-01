@@ -1,10 +1,9 @@
 /* File: Demo_put.c
- * This is an example of MPI one-side communication, MPI_Putß
+ * This is an example of MPI one-side communication, MPI_Put
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
  * * If everything works well, then no output
- *
 */
 #include "mpi.h"
 #include "stdio.h"
@@ -95,4 +94,7 @@ int main(int argc, char *argv[])
     MPI_Finalize();
     return errs;
 }
-
+/*
+-bash-4.1$ mpicc -o Demoput ../Demo_put.c
+-bash-4.1$ mpirun -n 2 Demoput
+ */

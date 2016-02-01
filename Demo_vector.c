@@ -3,7 +3,7 @@
  * Shows how to use MPI_Type_vector to send noncontiguous blocks of data
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
  *  output
          numx=5  extent=5 stride=1
          got 1 elements of type MY_TYPE
@@ -64,3 +64,21 @@ int main(int argc,char *argv[])
     }
     MPI_Finalize();
 }
+
+/*-bash-4.1$ mpicc -o Demovector Demo_vector.c
+-bash-4.1$ mpirun -n 2 Demovector
+send buf = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 count=5  blocklength=2 stride=5
+
+got 1 elements of type MY_TYPE
+which contained 10 elements of type MPI_DOUBLE
+ 0
+ 1
+ 5
+ 6
+ 10
+ 11
+ 15
+ 16
+ 20
+ 21
+*/

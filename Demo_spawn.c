@@ -2,7 +2,7 @@
  * This is an example for MPI_Comm_spawn & MPI_Intercomm_merge
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,3 +60,24 @@ int main(int argc, char **argv)
     }
   MPI_Finalize();
 }
+/*
+ *-bash-4.1$ mpicc -o Demospawn Demo_spawn.c
+ *  -bash-4.1$ mpirun -n 1 Demospawn
+Master task: first spawn
+Slave task started, world size=2 my rank=1
+Slave task, merging the communicator...
+Slave task started, world size=2 my rank=0
+Slave task, merging the communicator...
+Master task: second spawn
+Master task: the two groups have been spawned
+Master task: merging the first communicator...
+Slave task started, world size=2 my rank=1
+Slave task, merging the communicator...
+Slave task started, world size=2 my rank=0
+Slave task, merging the communicator...
+Slave task after the merge, world size=3 my rank=1
+Slave task after the merge, world size=3 my rank=2
+Master task: merging the second communicator...
+Slave task after the merge, world size=3 my rank=2
+Slave task after the merge, world size=3 my rank=1
+*/

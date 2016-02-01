@@ -1,7 +1,8 @@
-/* File: Demo_vector.c
+/* File: Demo_get.c
  * This is an example for one-sided communication MPI_Get
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
+ * Date: Jan, 2015, last update: Jan 2016
  */
 #include <stdio.h>
 #include <mpi.h>
@@ -47,3 +48,14 @@ int main(int argc, char** argv)
     MPI_Free_mem(b);
     MPI_Finalize();
 }
+
+/*
+-bash-4.1$ mpicc -o Demoget ../Demo_get.c
+-bash-4.1$ mpirun -n 2 Demoget
+Hello world! I’m rank 0 of 2 on login running MPI 3.0
+Hello world! I’m rank 1 of 2 on login running MPI 3.0
+Process 0 has the following: 0 1
+Process 1 has the following: 100 101
+Process 0 obtained the following:0 100
+Process 1 obtained the following:1 101
+ */

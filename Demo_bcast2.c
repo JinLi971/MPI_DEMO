@@ -3,7 +3,7 @@
  * MPI_Send/MPI_Recv and MPI_Bcast()
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -75,3 +75,10 @@ int main(int argc, char** argv) {
 
     MPI_Finalize();
 }
+
+/* -bash-4.1$ mpicc -o Demobcast Demo_bcast2.c
+ *  -bash-4.1$ mpirun -n 2 ./Demobcast 1000000 10
+Data size = 4000000 bytes, Trials = 10 times
+Avger SR_bcast time = 0.001045 seconds
+Avg MPI_Bcast time = 0.000719 seconds
+*/

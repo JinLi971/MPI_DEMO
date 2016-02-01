@@ -1,8 +1,9 @@
 /* File: Demo_isend_p.c
  * This is an example for MPI_Isend and MPI_Irecv. Without MPI_Wait
+ * Please compare to the Demo_isend.c
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,6 +42,11 @@ int main(int argc,char *argv[])
     }
     MPI_Finalize();
 }
-
+/*
+-bash-4.1$ mpicc -o DemoIsend_p Demo_isend_p.c
+-bash-4.1$ mpirun -n 2 DemoIsend_p
+processor 0  sent 123456
+processor 1  got 32725
+*/
 
 

@@ -3,7 +3,7 @@
  * shows how to find the size of incomming message
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
 */
 
 #include <stdio.h>
@@ -22,7 +22,7 @@ int main(int argc,char *argv[])
     mytag=1;
     if(myid == 0) {
         icount=3;
-        ierr=MPI_Send(&send[0],icount,MPI_INT,1,mytag,MPI_COMM_WORLD);
+        ierr=MPI_Rsend(&send[0],icount,MPI_INT,1,mytag,MPI_COMM_WORLD);
     }
     if(myid == 1){
         ierr=MPI_Probe(0,mytag,MPI_COMM_WORLD,&status);

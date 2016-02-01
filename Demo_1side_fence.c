@@ -2,7 +2,7 @@
  * This is an pingpoing example using post start complete for syn
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
  * This does a transpose and accumulate operations. Run on 2 processes
 */
 
@@ -73,13 +73,19 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        if (errs >= 50)
+        if (errs > 0)
         {
             printf("Total number of errors: %d\n", errs);
             fflush(stdout);
         }
+        else
+            printf("perfect match, no error!!\n");
     }
     MPI_Win_free(&win);
     MPI_Finalize();
     return 0;
 }
+/* No errors print nothing
+-bash-4.1$ mpicc -o Demofence ../Demo_1side_fence.c
+-bash-4.1$ mpirun -n 2 Demofence
+*/

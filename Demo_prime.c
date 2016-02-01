@@ -2,7 +2,7 @@
  * This is an example for to compute prime numbers using MPI
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
 */
 # include <stdlib.h>
 # include <stdio.h>
@@ -10,7 +10,6 @@
 # include <time.h>
 
 # include "mpi.h"
-
 
 /*****************************************************************************
     In order to divide the work up evenly among P processors, processor
@@ -114,6 +113,7 @@ int prime_number ( int n, int id, int p )
     }
     return total;
 }
+
 void timestamp ( void )
 {
 # define TIME_SIZE 40
@@ -128,3 +128,29 @@ void timestamp ( void )
     return;
 # undef TIME_SIZE
 }
+
+/*
+-bash-4.1$ mpicc -o Demoprime Demo_prime.c
+-bash-4.1$ mpirun -n 10 Demoprime 100000
+01 February 2016 01:35:42 PM
+
+PRIME_MPI
+  C/MPI version
+
+  An MPI example program to count the number of primes.
+  The number of processes is 10
+
+         N        #prime          Time
+
+         1         0        0.000046
+        10         4        0.000007
+       100        25        0.000010
+      1000       168        0.000233
+     10000      1229        0.014925
+    100000      9592        0.996356
+
+PRIME_MPI - Master process:
+  Normal end of execution.
+
+01 February 2016 01:35:43 PM
+*/

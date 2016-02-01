@@ -3,7 +3,7 @@
  * shows how to find the size of incomming message
  * Author: Jing Liu @ TDB,LMB, Uppsala University
  * Contact: jing.liu@it.uu.se , jing.liu@icm.it.uu.se
- * Date: Jan, 2015
+ * Date: Jan, 2015, last update: Jan 2016
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,3 +63,26 @@ int main(int argc,char *argv[]){
     mpi_err = MPI_Finalize();
 }
 
+/*
+-bash-4.1$ mpicc -o Demoscre Demo_reduce_scatter.c
+-bash-4.1$ mpirun -n 3 Demoscre
+messges in root is 0
+recv message at process 0, and the 4th value is 0
+recv message at process 0, and the 4th value is 1
+recv message at process 0, and the 4th value is 2
+recv message at process 0, and the 4th value is 3
+myid= 0 total= 6
+ Global sum from all processors= 66
+
+recv message at process 1, and the 4th value is 4
+recv message at process 1, and the 4th value is 5
+recv message at process 1, and the 4th value is 6
+recv message at process 1, and the 4th value is 7
+myid= 1 total= 22
+
+recv message at process 2, and the 4th value is 8
+recv message at process 2, and the 4th value is 9
+recv message at process 2, and the 4th value is 10
+recv message at process 2, and the 4th value is 11
+myid= 2 total= 38
+*/
